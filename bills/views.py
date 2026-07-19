@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from decimal import Decimal
 from .models import Bill
 from .forms import BillForm
 
@@ -22,7 +23,24 @@ def bill_list(request):
         sort = 'due_date'
 
     bills = Bill.objects.filter(owner=request.user).order_by(sort)
-    return render(request, 'bills/bill_list.html', {'form': form, 'bills': bills, 'current_sort': sort})
+    totals_by_income = {}
+    for bill in bills:
+        key = bill.income.source
+        totals_by_income[key] = totals_by_income.get(key, Decimal('0')) + bill.amount
+
+    totals_list = sorted(
+        [{'source': k, 'total': v} for k, v in totals_by_income.items()],
+        key=lambda x: x['source']
+    )
+    grand_total = sum(totals_by_income.values(), Decimal('0'))
+
+    return render(request, 'bills/bill_list.html', {
+        'form': form,
+        'bills': bills,
+        'current_sort': sort,
+        'totals_list': totals_list,
+        'grand_total': grand_total,
+    })
 
 
 @login_required

@@ -59,4 +59,21 @@
         </tr>
         {% endfor %}
     </table>
+    <h3 style="margin-top:32px;">Total by Income Source</h3>
+    <table>
+        <tr>
+            <th>Income Source</th>
+            <th>Total Bills</th>
+        </tr>
+        {% for row in totals_list %}
+        <tr>
+            <td>{{ row.source }}</td>
+            <td>${{ row.total|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+        <tr style="font-weight:bold;">
+            <td>Grand Total</td>
+            <td>${{ grand_total|floatformat:2 }}</td>
+        </tr>
+    </table>
 {% endblock %}

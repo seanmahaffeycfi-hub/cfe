@@ -8,6 +8,7 @@ class BillForm(forms.ModelForm):
         fields = ['recipient', 'amount', 'due_date', 'payment_source', 'payment_type', 'income']
         widgets = {
             'due_date': forms.DateInput(attrs={'type': 'date'}),
+            'recipient': forms.TextInput(attrs={'autofocus': True}),
         }
 
     def __init__(self, *args, **kwargs):

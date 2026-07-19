@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}Bills{% endblock %}
+{% block content %}
+    <h2>Bills</h2>
+
+    <form method="post" class="form-row" style="align-items:flex-start;">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.recipient.id_for_label }}">Recipient</label><br>
+            {{ form.recipient }}
+        </div>
+        <div>
+            <label for="{{ form.amount.id_for_label }}">Amount</label><br>
+            {{ form.amount }}
+        </div>
+        <div>
+            <label for="{{ form.due_date.id_for_label }}">Due Date</label><br>
+            {{ form.due_date }}
+        </div>
+        <div>
+            <label for="{{ form.payment_source.id_for_label }}">Payment Source</label><br>
+            {{ form.payment_source }}
+        </div>
+        <div>
+            <label for="{{ form.payment_type.id_for_label }}">Payment Type</label><br>
+            {{ form.payment_type }}
+        </div>
+        <div>
+            <label for="{{ form.income.id_for_label }}">Assigned Income</label><br>
+            {{ form.income }}
+        </div>
+        <div style="align-self:flex-end;">
+            <button type="submit">Add Bill</button>
+        </div>
+    </form>
+
+    <table>
+        <tr>
+            <th><a href="?sort={% if current_sort == 'recipient' %}-{% endif %}recipient" style="color:inherit;text-decoration:none;">Recipient</a></th>
+            <th><a href="?sort={% if current_sort == 'amount' %}-{% endif %}amount" style="color:inherit;text-decoration:none;">Amount</a></th>
+            <th><a href="?sort={% if current_sort == 'due_date' %}-{% endif %}due_date" style="color:inherit;text-decoration:none;">Due Date</a></th>
+            <th><a href="?sort={% if current_sort == 'payment_source' %}-{% endif %}payment_source" style="color:inherit;text-decoration:none;">Source</a></th>
+            <th><a href="?sort={% if current_sort == 'payment_type' %}-{% endif %}payment_type" style="color:inherit;text-decoration:none;">Type</a></th>
+            <th>Income</th>
+            <th></th>
+        </tr>
+        {% for bill in bills %}
+        <tr>
+            <td>{{ bill.recipient }}</td>
+            <td>${{ bill.amount }}</td>
+            <td>{{ bill.due_date }}</td>
+            <td>{{ bill.get_payment_source_display }}</td>
+            <td>{{ bill.get_payment_type_display }}</td>
+            <td>{{ bill.income.source }}</td>
+            <td>
+                <a href="{% url 'bill_delete' bill.pk %}" class="action-link delete">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

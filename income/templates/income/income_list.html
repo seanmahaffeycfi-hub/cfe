@@ -55,4 +55,24 @@
         </tr>
         {% endfor %}
     </table>
+        <h3 style="margin-top:32px;">Summary by Source</h3>
+    <table>
+        <tr>
+            <th>Source</th>
+            <th>Gross Total</th>
+            <th>Net Total</th>
+        </tr>
+        {% for row in summary_list %}
+        <tr>
+            <td>{{ row.source }}</td>
+            <td>${{ row.gross|floatformat:2 }}</td>
+            <td>${{ row.net|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+        <tr style="font-weight:bold;">
+            <td>Total</td>
+            <td>${{ total_gross|floatformat:2 }}</td>
+            <td>${{ total_net|floatformat:2 }}</td>
+        </tr>
+    </table>
 {% endblock %}

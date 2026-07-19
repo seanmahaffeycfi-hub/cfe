@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.db.models import ProtectedError
+from decimal import Decimal
 from .models import Income
 from .forms import IncomeForm
 
@@ -18,7 +19,29 @@ def income_list(request):
         form = IncomeForm()
 
     incomes = Income.objects.filter(owner=request.user)
-    return render(request, 'income/income_list.html', {'form': form, 'incomes': incomes})
+
+    summary = {}
+    for income in incomes:
+        key = income.source
+        if key not in summary:
+            summary[key] = {'gross': Decimal('0'), 'net': Decimal('0')}
+        summary[key]['gross'] += income.amount
+        summary[key]['net'] += income.net_amount
+
+    summary_list = sorted(
+        [{'source': k, 'gross': v['gross'], 'net': v['net']} for k, v in summary.items()],
+        key=lambda x: x['source']
+    )
+    total_gross = sum((i.amount for i in incomes), Decimal('0'))
+    total_net = sum((i.net_amount for i in incomes), Decimal('0'))
+
+    return render(request, 'income/income_list.html', {
+        'form': form,
+        'incomes': incomes,
+        'summary_list': summary_list,
+        'total_gross': total_gross,
+        'total_net': total_net,
+    })
 
 
 @login_required

@@ -7,8 +7,9 @@ class Income(models.Model):
     FREQUENCY_CHOICES = [
         ('weekly', 'Weekly'),
         ('biweekly', 'Biweekly'),
-        ('semimonthly', 'Semimonthly'),        
+        ('semimonthly', 'Semi-Monthly'),
         ('monthly', 'Monthly'),
+        ('onetime', 'One-Time'),
     ]
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     source = models.CharField(max_length=100)
@@ -60,5 +61,9 @@ class Income(models.Model):
             while current <= range_end:
                 dates.append(current)
                 current += relativedelta(months=1)
+
+        elif self.frequency == 'onetime':
+            if range_start <= self.start_pay_date <= range_end:
+                dates.append(self.start_pay_date)
 
         return sorted(dates)

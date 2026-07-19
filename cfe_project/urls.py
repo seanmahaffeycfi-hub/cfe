@@ -10,4 +10,5 @@ urlpatterns = [
     path('', RedirectView.as_view(url='/income/', permanent=False)),
     path('income/', include('income.urls')),
     path('bills/', include('bills.urls')),
+    path('cashflow/', include('cashflow.urls')),
 ]

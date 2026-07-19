@@ -6,5 +6,6 @@ class IncomeForm(forms.ModelForm):
         model = Income
         fields = ['source', 'amount', 'tax_deduction_percent', 'frequency', 'start_pay_date']
         widgets = {
-            'start_pay_date': forms.DateInput(attrs={'type': 'date'})
+            'start_pay_date': forms.DateInput(attrs={'type': 'date'}),
+            'source': forms.TextInput(attrs={'autofocus': True}),
         }

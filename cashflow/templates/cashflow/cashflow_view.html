@@ -37,8 +37,8 @@
             <td>{{ entry.owner }}</td>
             <td>{{ entry.date }}</td>
             <td>{{ entry.description }}</td>
-            <td style="color:#a8c9a8;">{% if entry.income_amount is not None %}${{ entry.income_amount|floatformat:2 }}{% endif %}</td>
-            <td style="color:#c98b8b;">{% if entry.bill_amount is not None %}${{ entry.bill_amount|floatformat:2 }}{% endif %}</td>
+            <td style="color:#81c995;">{% if entry.income_amount is not None %}${{ entry.income_amount|floatformat:2 }}{% endif %}</td>
+            <td style="color:#e07a5f;">{% if entry.bill_amount is not None %}${{ entry.bill_amount|floatformat:2 }}{% endif %}</td>
             {% for code, label in account_order %}<td>${{ entry.running|get_item:code|floatformat:2 }}</td>{% endfor %}
             <td>
                 {% if entry.kind == 'bill' %}

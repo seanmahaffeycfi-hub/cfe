@@ -4,6 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <title>CFE - {% block title %}Home{% endblock %}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=League+Spartan:wght@100..900&display=swap');
+    </style>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
@@ -13,6 +16,7 @@
         <a href="{% url 'cashflow_view' %}">Cash Flow Table</a>
         <a href="{% url 'cashflow_by_account' %}">By Account</a>
         <div class="spacer"></div>
+        <a href="{% url 'export_data' %}">Export Data</a>
         <a href="{% url 'logout' %}">Log Out</a>
     </nav>
     <div class="container">

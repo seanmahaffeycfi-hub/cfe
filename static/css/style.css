@@ -1,19 +1,19 @@
- body { background:#1a1a1a; color:#e5e0d8; font-family: 'Segoe UI', sans-serif; margin:0; }
-        nav { background:#242c2c; padding:16px 24px; display:flex; gap:24px; align-items:center; border-bottom:1px solid #47423d; }
-        nav a { color:#c9b8a8; text-decoration:none; font-weight:600; }
-        nav a:hover { color:#fff; }
-        nav .spacer { flex-grow:1; }
-        .container { padding:24px 32px; max-width:1100px; margin:0 auto; }
-        table { width:100%; border-collapse: collapse; margin-top:16px; }
-        th, td { text-align:left; padding:10px 12px; border-bottom:1px solid #47423d; }
-        th { color:#8e8b83; cursor:pointer; user-select:none; }
-        th:hover { color:#fff; }
-        input, select { background:#242c2c; color:#e5e0d8; border:1px solid #47423d; padding:8px; border-radius:4px; }
-        button { background:#686058; color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; }
-        button:hover { background:#8e8b83; }
-        .form-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
-        a.action-link { color:#c9b8a8; margin-right:10px; font-size:0.9em; }
-        a.action-link.delete { color:#a86868; }
-        label { font-size:0.8em; color:#8e8b83; display:block; margin-bottom:2px; }
-       .totals-table { table-layout: fixed; width: 100%; }
-       .totals-table th, .totals-table td { text-align: center; }
+body { background:#000000; color:#f4f4f9; font-family: 'League Spartan', sans-serif; margin:0; }
+nav { background:#2f4550; padding:16px 24px; display:flex; gap:24px; align-items:center; border-bottom:1px solid #586f7c; }
+nav a { color:#b8dbd9; text-decoration:none; font-weight:600; }
+nav a:hover { color:#f4f4f9; }
+nav .spacer { flex-grow:1; }
+.container { padding:24px 32px; max-width:1100px; margin:0 auto; }
+table { width:100%; border-collapse: collapse; margin-top:16px; }
+th, td { text-align:left; padding:10px 12px; border-bottom:1px solid #586f7c; }
+th { color:#b8dbd9; cursor:pointer; user-select:none; }
+th:hover { color:#f4f4f9; }
+input, select { background:#2f4550; color:#f4f4f9; border:1px solid #586f7c; padding:8px; border-radius:4px; }
+button { background:#586f7c; color:#f4f4f9; border:none; padding:8px 16px; border-radius:4px; cursor:pointer; }
+button:hover { background:#b8dbd9; color:#000000; }
+.form-row { display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
+a.action-link { color:#b8dbd9; margin-right:10px; font-size:0.9em; }
+a.action-link.delete { color:#e07a5f; }
+label { font-size:0.8em; color:#b8dbd9; display:block; margin-bottom:2px; }
+.totals-table { table-layout: fixed; width: 100%; }
+.totals-table th, .totals-table td { text-align: center; }

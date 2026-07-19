@@ -39,9 +39,9 @@ def _month_nav(year, month):
     return prev_year, prev_month, next_year, next_month
 
 
-def _bills_due_this_month(user, year, month):
+def _bills_due_this_month(year, month):
     """Expand every bill (recurring or one-time) into its due date for this specific month, if any."""
-    all_bills = Bill.objects.filter(owner=user).select_related('income')
+    all_bills = Bill.objects.all().select_related('income')
     result = []
     for bill in all_bills:
         due = bill.get_due_date_for_month(year, month)
@@ -54,14 +54,14 @@ def _bills_due_this_month(user, year, month):
 def cashflow_view(request):
     year, month, range_start, range_end, last_day = _get_month_range(request)
 
-    bills_this_month = _bills_due_this_month(request.user, year, month)
+    bills_this_month = _bills_due_this_month(year, month)
 
     account_totals = {code: Decimal('0') for code, label in ACCOUNT_ORDER}
     for bill, due in bills_this_month:
         account_totals[bill.payment_source] += bill.amount
 
     entries = []
-    incomes = Income.objects.filter(owner=request.user)
+    incomes = Income.objects.all()
     for income in incomes:
         for pay_date in income.get_pay_dates_in_range(range_start, range_end):
             entries.append({
@@ -132,8 +132,8 @@ def cashflow_by_account_view(request):
     period1_start, period1_end = range_start, date(year, month, mid_day)
     period2 = (date(year, month, mid_day + 1), range_end) if mid_day < last_day else None
 
-    incomes = Income.objects.filter(owner=request.user)
-    bills_with_due = _bills_due_this_month(request.user, year, month)
+    incomes = Income.objects.all()
+    bills_with_due = _bills_due_this_month(year, month)
 
     def blank_row(owner):
         return {'owner': owner, 'total_income': Decimal('0'), 'usaa': Decimal('0'),

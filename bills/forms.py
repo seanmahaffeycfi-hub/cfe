@@ -13,10 +13,8 @@ class BillForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
-        if user is not None:
-            self.fields['income'].queryset = self.fields['income'].queryset.model.objects.filter(owner=user)
         self.fields['due_date'].label = 'First Due Date'
         self.fields['is_recurring'].label = 'Recurring Monthly'
         self.fields['recurrence_end_date'].label = 'Ends After (optional)'

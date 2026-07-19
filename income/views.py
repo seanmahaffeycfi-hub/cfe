@@ -18,7 +18,7 @@ def income_list(request):
     else:
         form = IncomeForm()
 
-    incomes = Income.objects.filter(owner=request.user)
+    incomes = Income.objects.all()
 
     summary = {}
     for income in incomes:
@@ -46,7 +46,7 @@ def income_list(request):
 
 @login_required
 def income_delete(request, pk):
-    income = get_object_or_404(Income, pk=pk, owner=request.user)
+    income = get_object_or_404(Income, pk=pk)
     if request.method == 'POST':
         try:
             income.delete()
@@ -58,7 +58,7 @@ def income_delete(request, pk):
 
 @login_required
 def income_edit(request, pk):
-    income = get_object_or_404(Income, pk=pk, owner=request.user)
+    income = get_object_or_404(Income, pk=pk)
     if request.method == 'POST':
         form = IncomeForm(request.POST, instance=income)
         if form.is_valid():

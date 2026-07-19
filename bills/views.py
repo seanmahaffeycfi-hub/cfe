@@ -22,7 +22,7 @@ def bill_list(request):
     if sort.lstrip('-') not in valid_sorts:
         sort = 'due_date'
 
-    bills = Bill.objects.filter(owner=request.user).order_by(sort)
+    bills = Bill.objects.all().order_by(sort)
 
     totals_by_income = {}
     for bill in bills:
@@ -46,7 +46,7 @@ def bill_list(request):
 
 @login_required
 def bill_delete(request, pk):
-    bill = get_object_or_404(Bill, pk=pk, owner=request.user)
+    bill = get_object_or_404(Bill, pk=pk)
     if request.method == 'POST':
         bill.delete()
         return redirect('bill_list')
@@ -55,7 +55,7 @@ def bill_delete(request, pk):
 
 @login_required
 def bill_edit(request, pk):
-    bill = get_object_or_404(Bill, pk=pk, owner=request.user)
+    bill = get_object_or_404(Bill, pk=pk)
     if request.method == 'POST':
         form = BillForm(request.POST, instance=bill, user=request.user)
         if form.is_valid():
@@ -68,7 +68,7 @@ def bill_edit(request, pk):
 
 @login_required
 def bill_toggle_paid(request, pk):
-    bill = get_object_or_404(Bill, pk=pk, owner=request.user)
+    bill = get_object_or_404(Bill, pk=pk)
     if request.method == 'POST':
         try:
             year = int(request.POST.get('year'))

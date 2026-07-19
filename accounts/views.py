@@ -7,8 +7,8 @@ from bills.models import Bill
 
 @login_required
 def export_data(request):
-    incomes = Income.objects.filter(owner=request.user)
-    bills = Bill.objects.filter(owner=request.user).select_related('income')
+    incomes = Income.objects.all()
+    bills = Bill.objects.all().select_related('income')
 
     data = {
         'exported_at': timezone.now().isoformat(),

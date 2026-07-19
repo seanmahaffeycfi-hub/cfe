@@ -51,17 +51,19 @@
     <h3 style="margin-top:32px;">{{ section.label }}</h3>
     <table>
         <tr><th>Income Owner</th><th>Day Due</th><th>Description</th><th>Bill</th><th>Paid</th></tr>
-        {% for bill in section.bills %}
+               {% for bill, due, paid in section.bills %}
         <tr>
             <td>{{ bill.income.source }}</td>
-            <td>{{ bill.due_date|date:"d" }}</td>
+            <td>{{ due|date:"d" }}</td>
             <td>{{ bill.recipient }}</td>
             <td>${{ bill.amount|floatformat:2 }}</td>
             <td>
                 <form method="post" action="{% url 'bill_toggle_paid' bill.pk %}" style="display:inline;">
                     {% csrf_token %}
+                    <input type="hidden" name="year" value="{{ year }}">
+                    <input type="hidden" name="month" value="{{ month }}">
                     <input type="hidden" name="next" value="{% url 'cashflow_by_account' %}?year={{ year }}&month={{ month }}">
-                    <input type="checkbox" onchange="this.form.submit()" {% if bill.paid %}checked{% endif %}>
+                    <input type="checkbox" onchange="this.form.submit()" {% if paid %}checked{% endif %}>
                 </form>
             </td>
         </tr>

@@ -39,19 +39,25 @@ def _month_nav(year, month):
     return prev_year, prev_month, next_year, next_month
 
 
+def _bills_due_this_month(user, year, month):
+    """Expand every bill (recurring or one-time) into its due date for this specific month, if any."""
+    all_bills = Bill.objects.filter(owner=user).select_related('income')
+    result = []
+    for bill in all_bills:
+        due = bill.get_due_date_for_month(year, month)
+        if due:
+            result.append((bill, due))
+    return result
+
+
 @login_required
 def cashflow_view(request):
     year, month, range_start, range_end, last_day = _get_month_range(request)
 
-    bills_this_month = list(
-        Bill.objects.filter(owner=request.user, due_date__gte=range_start, due_date__lte=range_end)
-        .select_related('income')
-    )
+    bills_this_month = _bills_due_this_month(request.user, year, month)
 
-    # Top summary: total committed per account this month, regardless of Paid status.
-    # Only changes when a bill is added, edited, or deleted -- not when Paid is toggled.
     account_totals = {code: Decimal('0') for code, label in ACCOUNT_ORDER}
-    for bill in bills_this_month:
+    for bill, due in bills_this_month:
         account_totals[bill.payment_source] += bill.amount
 
     entries = []
@@ -72,16 +78,16 @@ def cashflow_view(request):
                 'delete_url': f'/income/{income.pk}/delete/',
             })
 
-    for bill in bills_this_month:
+    for bill, due in bills_this_month:
         entries.append({
-            'date': bill.due_date,
+            'date': due,
             'kind': 'bill',
             'owner': bill.income.source,
             'description': bill.recipient,
             'income_amount': None,
             'bill_amount': bill.amount,
             'bill_pk': bill.pk,
-            'paid': bill.paid,
+            'paid': bill.is_paid_for(year, month),
             'payment_source': bill.payment_source,
             'edit_url': f'/bills/{bill.pk}/edit/',
             'delete_url': f'/bills/{bill.pk}/delete/',
@@ -89,8 +95,6 @@ def cashflow_view(request):
 
     entries.sort(key=lambda e: (e['date'], e['kind']))
 
-    # Running per-account balance: cumulative amount of UNPAID bills due on or before
-    # this row's date, within the current month, for each account.
     running = {code: Decimal('0') for code, label in ACCOUNT_ORDER}
     for e in entries:
         if e['kind'] == 'bill' and not e['paid']:
@@ -129,10 +133,7 @@ def cashflow_by_account_view(request):
     period2 = (date(year, month, mid_day + 1), range_end) if mid_day < last_day else None
 
     incomes = Income.objects.filter(owner=request.user)
-    bills = list(
-        Bill.objects.filter(owner=request.user, due_date__gte=range_start, due_date__lte=range_end)
-        .select_related('income')
-    )
+    bills_with_due = _bills_due_this_month(request.user, year, month)
 
     def blank_row(owner):
         return {'owner': owner, 'total_income': Decimal('0'), 'usaa': Decimal('0'),
@@ -145,8 +146,8 @@ def cashflow_by_account_view(request):
                 rows.setdefault(income.source, blank_row(income.source))
                 rows[income.source]['total_income'] += income.net_amount
 
-        for bill in bills:
-            if period_start <= bill.due_date <= period_end:
+        for bill, due in bills_with_due:
+            if period_start <= due <= period_end:
                 key = bill.income.source
                 rows.setdefault(key, blank_row(key))
                 rows[key][bill.payment_source] += bill.amount
@@ -163,7 +164,10 @@ def cashflow_by_account_view(request):
 
     account_sections = []
     for code, label in ACCOUNT_ORDER:
-        account_bills = sorted([b for b in bills if b.payment_source == code], key=lambda b: b.due_date)
+        account_bills = sorted(
+            [(bill, due, bill.is_paid_for(year, month)) for bill, due in bills_with_due if bill.payment_source == code],
+            key=lambda triple: triple[1]
+        )
         account_sections.append({'code': code, 'label': label, 'bills': account_bills})
 
     prev_year, prev_month, next_year, next_month = _month_nav(year, month)

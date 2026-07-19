@@ -28,6 +28,14 @@
             <label for="{{ form.income.id_for_label }}">Assigned Income</label><br>
             {{ form.income }}
         </div>
+        <div>
+            <label for="{{ form.is_recurring.id_for_label }}">Recurring Monthly</label><br>
+            {{ form.is_recurring }}
+        </div>
+        <div>
+            <label for="{{ form.recurrence_end_date.id_for_label }}">Ends After (optional)</label><br>
+            {{ form.recurrence_end_date }}
+        </div>
         <div style="align-self:flex-end;">
             <button type="submit">Save</button>
             <a href="{% url 'bill_list' %}" class="action-link" style="margin-left:12px;">Cancel</a>

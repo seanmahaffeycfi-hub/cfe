@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from decimal import Decimal
-from .models import Bill
+from .models import Bill, BillPayment
 from .forms import BillForm
 
 
@@ -23,6 +23,7 @@ def bill_list(request):
         sort = 'due_date'
 
     bills = Bill.objects.filter(owner=request.user).order_by(sort)
+
     totals_by_income = {}
     for bill in bills:
         key = bill.income.source
@@ -51,6 +52,7 @@ def bill_delete(request, pk):
         return redirect('bill_list')
     return render(request, 'bills/bill_delete.html', {'bill': bill})
 
+
 @login_required
 def bill_edit(request, pk):
     bill = get_object_or_404(Bill, pk=pk, owner=request.user)
@@ -63,12 +65,25 @@ def bill_edit(request, pk):
         form = BillForm(instance=bill, user=request.user)
     return render(request, 'bills/bill_edit.html', {'form': form, 'bill': bill})
 
+
 @login_required
 def bill_toggle_paid(request, pk):
     bill = get_object_or_404(Bill, pk=pk, owner=request.user)
     if request.method == 'POST':
-        bill.paid = not bill.paid
-        bill.save()
+        try:
+            year = int(request.POST.get('year'))
+            month = int(request.POST.get('month'))
+        except (TypeError, ValueError):
+            year, month = None, None
+
+        if bill.is_recurring and year and month:
+            payment, created = BillPayment.objects.get_or_create(bill=bill, year=year, month=month)
+            if not created:
+                payment.delete()
+        else:
+            bill.paid = not bill.paid
+            bill.save()
+
         next_url = request.POST.get('next') or 'cashflow_view'
         return redirect(next_url)
     return redirect('cashflow_view')

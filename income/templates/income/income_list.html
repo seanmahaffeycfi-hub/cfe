@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Income{% endblock %}
+{% block content %}
+    <h2>Income</h2>
+
+    <form method="post" class="form-row" style="align-items:flex-start;">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.source.id_for_label }}">Source</label><br>
+            {{ form.source }}
+        </div>
+        <div>
+            <label for="{{ form.amount.id_for_label }}">Amount</label><br>
+            {{ form.amount }}
+        </div>
+        <div>
+            <label for="{{ form.tax_deduction_percent.id_for_label }}">Tax %</label><br>
+            {{ form.tax_deduction_percent }}
+        </div>
+        <div>
+            <label for="{{ form.frequency.id_for_label }}">Frequency</label><br>
+            {{ form.frequency }}
+        </div>
+        <div>
+            <label for="{{ form.start_pay_date.id_for_label }}">Start Pay Date</label><br>
+            {{ form.start_pay_date }}
+        </div>
+        <div style="align-self:flex-end;">
+            <button type="submit">Add Income</button>
+        </div>
+    </form>
+
+    <table>
+        <tr>
+            <th>Source</th>
+            <th>Amount</th>
+            <th>Tax %</th>
+            <th>Net</th>
+            <th>Frequency</th>
+            <th>Start Pay Date</th>
+            <th></th>
+        </tr>
+        {% for income in incomes %}
+        <tr>
+            <td>{{ income.source }}</td>
+            <td>${{ income.amount }}</td>
+            <td>{{ income.tax_deduction_percent }}%</td>
+            <td>${{ income.net_amount|floatformat:2 }}</td>
+            <td>{{ income.get_frequency_display }}</td>
+            <td>{{ income.start_pay_date }}</td>
+            <td>
+                <a href="{% url 'income_delete' income.pk %}" class="action-link delete">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

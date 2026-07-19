@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <title>CFE - {% block title %}Home{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav>
+        <a href="{% url 'income_list' %}">Income</a>
+        {% comment %} <a href="{% url 'bill_list' %}">Bills</a> {% endcomment %}
+        {% comment %} <a href="{% url 'cashflow_view' %}">Cash Flow</a> {% endcomment %}
+        <div class="spacer"></div>
+        <a href="{% url 'logout' %}">Log Out</a>
+    </nav>
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

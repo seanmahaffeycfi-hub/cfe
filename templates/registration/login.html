@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CFE Login</title>
+</head>
+<body style="background:#1a1a1a; color:#e5e0d8; font-family:sans-serif; display:flex; justify-content:center; align-items:center; height:100vh; margin:0;">
+    <div style="background:#242c2c; padding:40px; border-radius:8px; width:300px;">
+        <h2 style="margin-top:0; color:#c9b8a8;">CFE Login</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" style="background:#686058; color:#fff; border:none; padding:10px 20px; border-radius:4px; cursor:pointer; width:100%;">Log In</button>
+        </form>
+    </div>
+</body>
+</html>

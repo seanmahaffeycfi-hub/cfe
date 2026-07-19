@@ -1,0 +1,16 @@
+# Ignore SQLite database
+/db.sqlite3
+
+# Ignore Python cache directories and compiled files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+env/
+
+# Byte-compiled / optimized / DLL files
+*.so
+*.egg-info/

@@ -14,3 +14,9 @@ env/
 # Byte-compiled / optimized / DLL files
 *.so
 *.egg-info/
+
+# Environment secrets
+.env
+
+# Collected static files (generated on deploy, not source)
+staticfiles/

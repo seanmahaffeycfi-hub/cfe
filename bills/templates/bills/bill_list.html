@@ -53,6 +53,7 @@
             <td>{{ bill.get_payment_type_display }}</td>
             <td>{{ bill.income.source }}</td>
             <td>
+                <a href="{% url 'bill_edit' bill.pk %}" class="action-link">Edit</a>
                 <a href="{% url 'bill_delete' bill.pk %}" class="action-link delete">Delete</a>
             </td>
         </tr>

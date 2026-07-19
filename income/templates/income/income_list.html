@@ -49,6 +49,7 @@
             <td>{{ income.get_frequency_display }}</td>
             <td>{{ income.start_pay_date }}</td>
             <td>
+                <a href="{% url 'income_edit' income.pk %}" class="action-link">Edit</a>
                 <a href="{% url 'income_delete' income.pk %}" class="action-link delete">Delete</a>
             </td>
         </tr>

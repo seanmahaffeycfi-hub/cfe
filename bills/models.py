@@ -21,7 +21,7 @@ class Bill(models.Model):
     due_date = models.DateField()
     payment_source = models.CharField(max_length=20, choices=SOURCE_CHOICES)
     payment_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
-    income = models.ForeignKey(Income, on_delete=models.CASCADE, related_name='bills')
+    income = models.ForeignKey(Income, on_delete=models.PROTECT, related_name='bills')
 
     class Meta:
         ordering = ['due_date']

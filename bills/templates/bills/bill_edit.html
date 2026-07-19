@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Edit Bill{% endblock %}
+{% block content %}
+    <h2>Edit Bill</h2>
+    <form method="post" class="form-row" style="align-items:flex-start;">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.recipient.id_for_label }}">Recipient</label><br>
+            {{ form.recipient }}
+        </div>
+        <div>
+            <label for="{{ form.amount.id_for_label }}">Amount</label><br>
+            {{ form.amount }}
+        </div>
+        <div>
+            <label for="{{ form.due_date.id_for_label }}">Due Date</label><br>
+            {{ form.due_date }}
+        </div>
+        <div>
+            <label for="{{ form.payment_source.id_for_label }}">Payment Source</label><br>
+            {{ form.payment_source }}
+        </div>
+        <div>
+            <label for="{{ form.payment_type.id_for_label }}">Payment Type</label><br>
+            {{ form.payment_type }}
+        </div>
+        <div>
+            <label for="{{ form.income.id_for_label }}">Assigned Income</label><br>
+            {{ form.income }}
+        </div>
+        <div style="align-self:flex-end;">
+            <button type="submit">Save</button>
+            <a href="{% url 'bill_list' %}" class="action-link" style="margin-left:12px;">Cancel</a>
+        </div>
+    </form>
+{% endblock %}

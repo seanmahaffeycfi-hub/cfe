@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Edit Income{% endblock %}
+{% block content %}
+    <h2>Edit Income</h2>
+    <form method="post" class="form-row" style="align-items:flex-start;">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.source.id_for_label }}">Source</label><br>
+            {{ form.source }}
+        </div>
+        <div>
+            <label for="{{ form.amount.id_for_label }}">Amount</label><br>
+            {{ form.amount }}
+        </div>
+        <div>
+            <label for="{{ form.tax_deduction_percent.id_for_label }}">Tax %</label><br>
+            {{ form.tax_deduction_percent }}
+        </div>
+        <div>
+            <label for="{{ form.frequency.id_for_label }}">Frequency</label><br>
+            {{ form.frequency }}
+        </div>
+        <div>
+            <label for="{{ form.start_pay_date.id_for_label }}">Start Pay Date</label><br>
+            {{ form.start_pay_date }}
+        </div>
+        <div style="align-self:flex-end;">
+            <button type="submit">Save</button>
+            <a href="{% url 'income_list' %}" class="action-link" style="margin-left:12px;">Cancel</a>
+        </div>
+    </form>
+{% endblock %}

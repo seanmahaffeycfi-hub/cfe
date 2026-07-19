@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Cannot Delete{% endblock %}
+{% block content %}
+    <h2>Cannot Delete Income</h2>
+    <p><strong>{{ income.source }}</strong> has bills assigned to it and can't be deleted until those bills are reassigned to a different income or removed.</p>
+    <a href="{% url 'bill_list' %}" class="action-link">Go to Bills</a>
+    <a href="{% url 'income_list' %}" class="action-link" style="margin-left:12px;">Back to Income</a>
+{% endblock %}

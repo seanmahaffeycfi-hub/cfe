@@ -22,6 +22,7 @@ class Bill(models.Model):
     payment_source = models.CharField(max_length=20, choices=SOURCE_CHOICES)
     payment_type = models.CharField(max_length=10, choices=TYPE_CHOICES)
     income = models.ForeignKey(Income, on_delete=models.PROTECT, related_name='bills')
+    paid = models.BooleanField(default=False)
 
     class Meta:
         ordering = ['due_date']

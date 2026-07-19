@@ -15,3 +15,5 @@
         a.action-link { color:#c9b8a8; margin-right:10px; font-size:0.9em; }
         a.action-link.delete { color:#a86868; }
         label { font-size:0.8em; color:#8e8b83; display:block; margin-bottom:2px; }
+       .totals-table { table-layout: fixed; width: 100%; }
+       .totals-table th, .totals-table td { text-align: center; }

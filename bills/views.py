@@ -62,3 +62,13 @@ def bill_edit(request, pk):
     else:
         form = BillForm(instance=bill, user=request.user)
     return render(request, 'bills/bill_edit.html', {'form': form, 'bill': bill})
+
+@login_required
+def bill_toggle_paid(request, pk):
+    bill = get_object_or_404(Bill, pk=pk, owner=request.user)
+    if request.method == 'POST':
+        bill.paid = not bill.paid
+        bill.save()
+        next_url = request.POST.get('next') or 'cashflow_view'
+        return redirect(next_url)
+    return redirect('cashflow_view')

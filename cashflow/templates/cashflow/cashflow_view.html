@@ -1,7 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Cash Flow{% endblock %}
+{% load cashflow_extras %}
+{% block title %}Cash Flow Table{% endblock %}
 {% block content %}
-    <h2>Cash Flow</h2>
+    <h2>Cash Flow Table</h2>
 
     <div class="form-row" style="justify-content:space-between;">
         <a href="?year={{ prev_year }}&month={{ prev_month }}" class="action-link">&laquo; Previous Month</a>
@@ -9,22 +10,45 @@
         <a href="?year={{ next_year }}&month={{ next_month }}" class="action-link">Next Month &raquo;</a>
     </div>
 
-    <table>
+    <h3>Total Committed This Month by Account</h3>
+    <table class="totals-table">
         <tr>
-            <th><a href="?year={{ year }}&month={{ month }}&sort={% if current_sort == 'date' %}-{% endif %}date" style="color:inherit;text-decoration:none;">Date</a></th>
-            <th><a href="?year={{ year }}&month={{ month }}&sort={% if current_sort == 'type' %}-{% endif %}type" style="color:inherit;text-decoration:none;">Type</a></th>
-            <th><a href="?year={{ year }}&month={{ month }}&sort={% if current_sort == 'description' %}-{% endif %}description" style="color:inherit;text-decoration:none;">Description</a></th>
-            <th><a href="?year={{ year }}&month={{ month }}&sort={% if current_sort == 'amount' %}-{% endif %}amount" style="color:inherit;text-decoration:none;">Amount</a></th>
-            <th><a href="?year={{ year }}&month={{ month }}&sort={% if current_sort == 'balance' %}-{% endif %}balance" style="color:inherit;text-decoration:none;">Balance</a></th>
+            {% for code, label in account_order %}<th>{{ label }}</th>{% endfor %}
+        </tr>
+        <tr>
+            {% for code, label in account_order %}<td>${{ account_totals|get_item:code|floatformat:2 }}</td>{% endfor %}
+        </tr>
+    </table>
+    <p style="font-size:0.85em;color:#8e8b83;">Reflects all bills entered for {{ month_label }} regardless of Paid status; changes only when a bill is added, edited, or deleted.</p>
+
+    <table style="margin-top:24px;">
+        <tr>
+            <th>Income Owner</th>
+            <th><a href="?year={{ year }}&month={{ month }}&sort={% if current_sort == 'date' %}-{% endif %}date" style="color:inherit;text-decoration:none;">Due</a></th>
+            <th>Description</th>
+            <th>Income</th>
+            <th>Bill</th>
+            {% for code, label in account_order %}<th>{{ label }}</th>{% endfor %}
+            <th>Paid</th>
             <th></th>
         </tr>
         {% for entry in entries %}
         <tr>
+            <td>{{ entry.owner }}</td>
             <td>{{ entry.date }}</td>
-            <td>{{ entry.type }}</td>
             <td>{{ entry.description }}</td>
-            <td style="color:{% if entry.amount < 0 %}#c98b8b{% else %}#a8c9a8{% endif %};">${{ entry.amount|floatformat:2 }}</td>
-            <td>${{ entry.balance|floatformat:2 }}</td>
+            <td style="color:#a8c9a8;">{% if entry.income_amount is not None %}${{ entry.income_amount|floatformat:2 }}{% endif %}</td>
+            <td style="color:#c98b8b;">{% if entry.bill_amount is not None %}${{ entry.bill_amount|floatformat:2 }}{% endif %}</td>
+            {% for code, label in account_order %}<td>${{ entry.running|get_item:code|floatformat:2 }}</td>{% endfor %}
+            <td>
+                {% if entry.kind == 'bill' %}
+                <form method="post" action="{% url 'bill_toggle_paid' entry.bill_pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'cashflow_view' %}?{{ query_string }}">
+                    <input type="checkbox" onchange="this.form.submit()" {% if entry.paid %}checked{% endif %}>
+                </form>
+                {% endif %}
+            </td>
             <td>
                 <a href="{{ entry.edit_url }}" class="action-link">Edit</a>
                 <a href="{{ entry.delete_url }}" class="action-link delete">Delete</a>

@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}Cash Flow by Account{% endblock %}
+{% block content %}
+    <h2>Cash Flow Payment Account</h2>
+
+    <div class="form-row" style="justify-content:space-between;">
+        <a href="?year={{ prev_year }}&month={{ prev_month }}" class="action-link">&laquo; Previous Month</a>
+        <strong>{{ month_label }}</strong>
+        <a href="?year={{ next_year }}&month={{ next_month }}" class="action-link">Next Month &raquo;</a>
+    </div>
+
+    <h3>Income ({{ period1_label }})</h3>
+    <table>
+        <tr>
+            <th>Owner</th><th>Total Income</th><th>USAA</th><th>USAA Savings</th><th>Chase</th><th>CapOne</th><th>Remaining</th>
+        </tr>
+        {% for row in period1_summary %}
+        <tr>
+            <td>{{ row.owner }}</td>
+            <td>${{ row.total_income|floatformat:2 }}</td>
+            <td>${{ row.usaa|floatformat:2 }}</td>
+            <td>${{ row.usaa_savings|floatformat:2 }}</td>
+            <td>${{ row.chase|floatformat:2 }}</td>
+            <td>${{ row.capone|floatformat:2 }}</td>
+            <td>${{ row.remaining|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    {% if period2_label %}
+    <h3 style="margin-top:24px;">Income ({{ period2_label }})</h3>
+    <table>
+        <tr>
+            <th>Owner</th><th>Total Income</th><th>USAA</th><th>USAA Savings</th><th>Chase</th><th>CapOne</th><th>Remaining</th>
+        </tr>
+        {% for row in period2_summary %}
+        <tr>
+            <td>{{ row.owner }}</td>
+            <td>${{ row.total_income|floatformat:2 }}</td>
+            <td>${{ row.usaa|floatformat:2 }}</td>
+            <td>${{ row.usaa_savings|floatformat:2 }}</td>
+            <td>${{ row.chase|floatformat:2 }}</td>
+            <td>${{ row.capone|floatformat:2 }}</td>
+            <td>${{ row.remaining|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    {% for section in account_sections %}
+    <h3 style="margin-top:32px;">{{ section.label }}</h3>
+    <table>
+        <tr><th>Income Owner</th><th>Day Due</th><th>Description</th><th>Bill</th><th>Paid</th></tr>
+        {% for bill in section.bills %}
+        <tr>
+            <td>{{ bill.income.source }}</td>
+            <td>{{ bill.due_date|date:"d" }}</td>
+            <td>{{ bill.recipient }}</td>
+            <td>${{ bill.amount|floatformat:2 }}</td>
+            <td>
+                <form method="post" action="{% url 'bill_toggle_paid' bill.pk %}" style="display:inline;">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{% url 'cashflow_by_account' %}?year={{ year }}&month={{ month }}">
+                    <input type="checkbox" onchange="this.form.submit()" {% if bill.paid %}checked{% endif %}>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endfor %}
+{% endblock %}
